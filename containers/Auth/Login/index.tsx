@@ -1,23 +1,32 @@
 "use client";
 
-import { Button, FormField } from "@/components";
-import { FormValues, validateForm } from "@/schemas/login";
-import axios from "axios";
-import { Formik } from "formik";
-import { useRouter } from "next/navigation";
 // Core types
-import { useState, type FC } from "react";
+import { type FC, useTransition, useState } from "react";
+
+// Global components
+import { Button, FormField, FormError, FormSuccess } from "@/components";
+
+// Validation schema
+import { FormValues, LoginSchema, validateForm } from "@/schemas/login";
+
 // Icon's
 import { Eye } from "@styled-icons/fluentui-system-regular/Eye";
 import { EyeOff } from "@styled-icons/fluentui-system-regular/EyeOff";
 
 // Vendors
-import styled, { css } from "styled-components";
+import * as z from "zod";
+import { Formik } from "formik";
+import styled from "styled-components";
 import { signIn } from "next-auth/react";
 
-const Login = styled.div`
-  padding: 210px;
-  ${({ theme: { defaults, colors, font, ...theme } }) => css``}
+// Server actions
+
+const LoginWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
 
 const EyeWrap = styled.div`
@@ -29,58 +38,55 @@ const EyeWrap = styled.div`
   z-index: 3;
 `;
 
-interface ILogin {}
-
-const index: FC<ILogin> = () => {
-  // Handle router
-  const router = useRouter();
-
+export const Login: FC = () => {
   // Password eye state
   const [isEyeOpened, setIsEyeOpened] = useState(false);
 
-  // Handle errors
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
+  // Handle errors and success messages
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+  const [successMessage, setSuccessMessage] = useState<string | undefined>("");
+
+  // Pending state
+  const [isPending, startTransition] = useTransition();
+
+  const handleProviderLogin = (provider: "google") => {
+    startTransition(() => {
+      signIn(provider, { callbackUrl: "/" });
+    });
+  };
+
   return (
-    <Login>
+    <LoginWrap>
       <Formik<FormValues>
         initialValues={{
           email: "",
           password: "",
         }}
         validate={validateForm}
-        onSubmit={async (data, { setSubmitting }) => {
+        onSubmit={async (data: z.infer<typeof LoginSchema>) => {
           await signIn("credentials", {
             email: data.email,
             password: data.password,
-            redirect: false,
+            // redirect: false,
           }).then(({ error }: any) => {
-            if (error === "Verification failed") {
-              setErrorMessage("Failed");
+            if (error) {
+              // Alert error
+              setErrorMessage(error);
             } else {
-              if (error) {
-                // Alert error
-                setErrorMessage(error);
-
-                // Disable submitting
-                setTimeout(() => {
-                  setSubmitting(false);
-                }, 500);
-              } else {
-                // Set error to false
-                setErrorMessage("");
-
-                // Reroute user to the dashboard
-                router.push("/");
-              }
+              // Set error to false
+              setSuccessMessage("Succes");
             }
           });
         }}
       >
-        {({ handleSubmit, isSubmitting }) => (
+        {({ handleSubmit }) => (
           <form id="myForm" onSubmit={handleSubmit}>
-            <FormField name="email" type="email" label="Email" />
+            <FormField
+              name="email"
+              type="email"
+              label="Email"
+              disabled={isPending}
+            />
             <FormField
               name="password"
               type={isEyeOpened ? "text" : "password"}
@@ -94,21 +100,25 @@ const index: FC<ILogin> = () => {
                   )}
                 </EyeWrap>
               }
+              disabled={isPending}
             />
+
+            <FormError message={errorMessage} />
+            <FormSuccess message={successMessage} />
 
             <Button
               type="submit"
               $variant="secondary"
-              $isLoading={isSubmitting}
+              $isLoading={isPending}
               $fullWidth={true}
             >
-              {isSubmitting ? "Loading" : "Sign up"}
+              {isPending ? "Loading" : "Login"}
             </Button>
           </form>
         )}
       </Formik>
-    </Login>
+
+      <button onClick={() => handleProviderLogin("google")}>Gooogle</button>
+    </LoginWrap>
   );
 };
-
-export { index as Login };

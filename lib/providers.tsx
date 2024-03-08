@@ -12,11 +12,15 @@ import { AppThemes } from "@/context/theme";
 // Global types
 import { ITheme } from "@/types";
 
-// Vendors
+// Vendor types
+import type { Session } from "next-auth";
+
+// Local registry
 import StyledComponentsRegistry from "./registry";
+
+// Vendors
 import { ThemeProvider } from "styled-components";
 import { SessionProvider } from "next-auth/react";
-import type { Session } from "next-auth";
 
 const Providers = (props: React.PropsWithChildren, session: Session) => {
   const { theme } = useContext(StoreContext);

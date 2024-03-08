@@ -3,8 +3,7 @@ import type { Types, Document } from "mongoose";
 
 export interface User {
   _id: Types.ObjectId;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   password: string;
   user: Types.PopulatedDoc<User & Document>;

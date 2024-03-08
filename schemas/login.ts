@@ -1,8 +1,8 @@
 import { ZodError, z } from "zod";
 
 // Define the schema outside of the function
-const LoginSchema = z.object({
-  email: z.string().email("Invalid email address").min(5, "Email is too short"),
+export const LoginSchema = z.object({
+  email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password is too short"),
 });
 

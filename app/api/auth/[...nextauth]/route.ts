@@ -1,7 +1,7 @@
 // Vendors
 import NextAuth from "next-auth";
 
-// Auth lib
+// Auth config
 import { authOptions } from "@/lib/authOptions";
 
 const handler = NextAuth(authOptions);

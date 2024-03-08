@@ -1,29 +1,33 @@
 "use client";
 
-// Core types
-import type { FC } from "react";
-
 // Core
-import { useState } from "react";
+import { type FC, useState, useTransition } from "react";
 
 // Vendors
-import axios from "axios";
+import * as z from "zod";
 import { Formik } from "formik";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
 
 // Global components
-import { Button, FormField } from "@/components";
+import { Button, FormError, FormField, FormSuccess } from "@/components";
 
 // Icon's
 import { Eye } from "@styled-icons/fluentui-system-regular/Eye";
 import { EyeOff } from "@styled-icons/fluentui-system-regular/EyeOff";
 
 // Validation schema
-import { FormValues, validateForm } from "@/schemas/signUp";
+import { FormValues, SignUpSchema, validateForm } from "@/schemas/signUp";
 
-const SignUp = styled.div`
-  padding: 210px;
+// Server actions
+import { register } from "@/actions/register";
+import { signIn } from "next-auth/react";
+
+const SignUpWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
 
 const EyeWrap = styled.div`
@@ -35,17 +39,25 @@ const EyeWrap = styled.div`
   z-index: 3;
 `;
 
-interface ISignUp {}
-
-const index: FC<ISignUp> = () => {
-  // Handle router
-  const router = useRouter();
-
+export const SignUp: FC = () => {
   // Password eye state
   const [isEyeOpened, setIsEyeOpened] = useState(false);
 
+  // Handle errors and success messages
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+  const [successMessage, setSuccessMessage] = useState<string | undefined>("");
+
+  // Pending state
+  const [isPending, startTransition] = useTransition();
+
+  const handleProviderLogin = (provider: "google") => {
+    startTransition(() => {
+      signIn(provider, { callbackUrl: "/" });
+    });
+  };
+
   return (
-    <SignUp>
+    <SignUpWrap>
       <Formik<FormValues>
         initialValues={{
           fullName: "",
@@ -53,24 +65,19 @@ const index: FC<ISignUp> = () => {
           password: "",
         }}
         validate={validateForm}
-        onSubmit={async data => {
-          await axios({
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            url: "/api/register",
-            data,
-          })
-            .then(res => {
-              router.push("/login");
-            })
-            .catch(err => {
-              console.log(err.response.data);
+        onSubmit={async (data: z.infer<typeof SignUpSchema>) => {
+          setErrorMessage(undefined);
+          setSuccessMessage(undefined);
+
+          startTransition(() => {
+            register(data).then(({ error, success }) => {
+              setErrorMessage(error);
+              setSuccessMessage(success);
             });
+          });
         }}
       >
-        {({ handleSubmit, isSubmitting }) => (
+        {({ handleSubmit }) => (
           <form id="myForm" onSubmit={handleSubmit}>
             <FormField name="fullName" type="text" label="Full Name" />
             <FormField name="email" type="email" label="Email" />
@@ -89,19 +96,22 @@ const index: FC<ISignUp> = () => {
               }
             />
 
+            <FormError message={errorMessage} />
+            <FormSuccess message={successMessage} />
+
             <Button
               type="submit"
               $variant="secondary"
-              $isLoading={isSubmitting}
+              $isLoading={isPending}
               $fullWidth={true}
             >
-              {isSubmitting ? "Loading" : "Sign up"}
+              {isPending ? "Loading" : "Create an account"}
             </Button>
           </form>
         )}
       </Formik>
-    </SignUp>
+
+      <button onClick={() => handleProviderLogin("google")}>Gooogle</button>
+    </SignUpWrap>
   );
 };
-
-export { index as SignUp };

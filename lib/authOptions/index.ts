@@ -1,4 +1,5 @@
 import Credentials from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 // Vendor types
 import type { AuthOptions } from "next-auth";
@@ -50,6 +51,10 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
 
   secret: process.env.SECRET,
@@ -64,7 +69,6 @@ export const authOptions: AuthOptions = {
     secret: process.env.SECRET,
   },
 
-  // pages: {},
   callbacks: {
     async session({ session, token: { user } }) {
       // Assign user on the current session
@@ -78,6 +82,11 @@ export const authOptions: AuthOptions = {
       user && (token.user = user);
       return token;
     },
+  },
+
+  pages: {
+    newUser: "/sign-up",
+    signIn: "/login",
   },
 
   // Enable debug messages in the console if you are having problems

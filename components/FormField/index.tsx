@@ -29,6 +29,7 @@ interface IFormField {
   placeholder?: string;
   label: string;
   customCode?: JSX.Element;
+  disabled?: boolean;
 }
 
 export const FormField: FC<IFormField> = ({
@@ -37,6 +38,7 @@ export const FormField: FC<IFormField> = ({
   placeholder,
   label,
   customCode,
+  disabled,
 }) => {
   const { values, handleChange, handleBlur, errors, touched } =
     useFormikContext<FormikValues>();
@@ -54,16 +56,17 @@ export const FormField: FC<IFormField> = ({
           onBlur={handleBlur}
           value={values[name]}
           $hasError={Boolean(errors[name] && touched[name])}
+          disabled={disabled}
         />
 
         {customCode && customCode}
       </Group>
 
-      {errors[name] && (
-        <Errorgroup>
-          {errors[name] && touched[name] ? <>{errors[name]}</> : null}
-        </Errorgroup>
-      )}
+      {errors[name] && errors[name] && touched[name]
+        ? (errors[name] as string[])?.map((error: string, key: number) => (
+            <Errorgroup key={key}>{error}</Errorgroup>
+          ))
+        : null}
     </Wrapper>
   );
 };

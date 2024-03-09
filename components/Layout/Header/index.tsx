@@ -4,7 +4,7 @@
 import type { FC } from "react";
 
 // Core
-import { useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 
 // Store context
 import { StoreContext } from "@/context";
@@ -22,8 +22,12 @@ import { Button } from "@/components";
 import { Navigation } from "./Navigation";
 import { signOut } from "next-auth/react";
 
+import { Moon } from "@styled-icons/feather/Moon";
+import { Sun } from "@styled-icons/feather/Sun";
+import { useSetCookie } from "@/lib/shared";
+
 export const Header: FC = () => {
-  const { isTablet } = useContext(StoreContext);
+  const { isTablet, setAppTheme } = useContext(StoreContext);
 
   const [toggled, setToggle] = useState<boolean>(true);
 
@@ -33,10 +37,22 @@ export const Header: FC = () => {
 
   return (
     <WrapperHeader>
-      <Link href="/">
-        {/* <Logo src="/logo.png" alt="" /> */}
-        Logo
-      </Link>
+      <Link href="/">Logo</Link>
+
+      <button>
+        <Sun
+          width={30}
+          height={30}
+          color="primary"
+          onClick={() => setAppTheme("light")}
+        />
+        <Moon
+          width={30}
+          height={30}
+          color="primary"
+          onClick={() => setAppTheme("dark")}
+        />
+      </button>
 
       {!isTablet && (
         <Nav>

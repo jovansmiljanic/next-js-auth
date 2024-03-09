@@ -18,6 +18,7 @@ import * as z from "zod";
 import { Formik } from "formik";
 import styled from "styled-components";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Server actions
 
@@ -39,6 +40,8 @@ const EyeWrap = styled.div`
 `;
 
 export const Login: FC = () => {
+  const router = useRouter();
+
   // Password eye state
   const [isEyeOpened, setIsEyeOpened] = useState(false);
 
@@ -64,17 +67,29 @@ export const Login: FC = () => {
         }}
         validate={validateForm}
         onSubmit={async (data: z.infer<typeof LoginSchema>) => {
+          const validatedFields = LoginSchema.safeParse(data);
+
+          if (!validatedFields.success) {
+            setErrorMessage(validatedFields.error.errors[0].message);
+          }
+
           await signIn("credentials", {
             email: data.email,
             password: data.password,
-            // redirect: false,
-          }).then(({ error }: any) => {
+            redirect: false,
+          }).then(error => {
             if (error) {
-              // Alert error
-              setErrorMessage(error);
+              switch (error.error) {
+                case "CredentialsSignin":
+                  setErrorMessage("Invalid credentials");
+                default:
+                  setErrorMessage(error.error!);
+              }
             } else {
               // Set error to false
               setSuccessMessage("Succes");
+
+              router.push("/");
             }
           });
         }}

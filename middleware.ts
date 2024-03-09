@@ -5,16 +5,18 @@ import {
   authRoutes,
   publicRoutes,
 } from "./routes";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
+  const response = NextResponse.next();
+
+  // Checks if the user is logged in
   const isLoggedIn = await getToken({ req, secret: process.env.SECRET });
 
-  const { nextUrl } = req;
-
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  // Protects route
+  const isApiAuthRoute = req.nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute = publicRoutes.includes(req.nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(req.nextUrl.pathname);
 
   if (!isLoggedIn && isAuthRoute) {
     return null;
@@ -25,21 +27,28 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (!isLoggedIn) {
-    return Response.redirect(new URL("/login", nextUrl));
+    return Response.redirect(new URL("/login", req.nextUrl));
   }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.nextUrl));
     }
     return null;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/login", nextUrl));
+    return Response.redirect(new URL("/login", req.nextUrl));
   }
 
-  return null;
+  // Set theme cookie
+  const theme = req.cookies.get("theme");
+
+  if (!theme) {
+    response.cookies.set({ name: "theme", value: "light", path: "/login" });
+  } else {
+    response.cookies.set({ name: "theme", value: theme.value, path: "/login" });
+  }
 }
 
 export const config = {

@@ -1,6 +1,3 @@
-// Global styles
-import GlobalStyle from "@/styles/globalStyles";
-
 // Fonts
 import { Comfortaa } from "next/font/google";
 
@@ -11,6 +8,8 @@ import { Store } from "@/context";
 
 // Global context
 import { Layout } from "@/components/Layout";
+
+import { cookies } from "next/headers";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
@@ -26,6 +25,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = cookies();
+  const theme = cookieStore.get("theme")! as { value: "light" | "dark" };
+
   return (
     <html className={comfortaa.className}>
       <head>
@@ -36,13 +38,11 @@ export default function RootLayout({
       </head>
 
       <body>
-        <Providers>
-          <GlobalStyle />
-
-          <Store>
+        <Store theme={theme.value}>
+          <Providers>
             <Layout>{children}</Layout>
-          </Store>
-        </Providers>
+          </Providers>
+        </Store>
       </body>
     </html>
   );

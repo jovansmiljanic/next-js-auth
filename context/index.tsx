@@ -14,26 +14,28 @@ import { ThemeProvider } from "styled-components";
 
 // App context properties
 import { AppThemes } from "@/context/theme";
+import { useSetCookie } from "@/lib/shared";
+
+type Theme = "light" | "dark";
 
 // Instruct component Props Types
 interface IProps {
   children: React.ReactNode;
+  theme: Theme;
 }
 
 // Instruct component State Types
 interface IAppContext {
   isPhone?: boolean;
   isTablet?: boolean;
-
-  theme: "light" | "dark";
+  appTheme?: Theme;
+  setAppTheme: (theme: Theme) => void;
 }
 
-type Theme = "light" | "dark";
-
-export const Store: FC<IProps> = props => {
+export const Store: FC<IProps> = ({ children, theme }) => {
   const [isPhone, setIsPhone] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
-  const [theme, setTheme] = useState<Theme>("light");
+  const [appTheme, setAppTheme] = useState<Theme>(theme);
 
   const detectLayout = useCallback(() => {
     setIsPhone(window.matchMedia("(max-width: 768px)").matches);
@@ -48,17 +50,22 @@ export const Store: FC<IProps> = props => {
     return () => window.removeEventListener("resize", detectLayout);
   }, [detectLayout]);
 
+  useEffect(() => {
+    useSetCookie({ name: "theme", value: appTheme, days: 30 });
+  }, [appTheme]);
+
   return (
     <StoreContext.Provider
       value={
         {
           isPhone,
           isTablet,
-          theme,
+          appTheme,
+          setAppTheme,
         } as IAppContext
       }
     >
-      <ThemeProvider theme={AppThemes[theme]}>{props.children}</ThemeProvider>
+      <ThemeProvider theme={AppThemes[appTheme]}>{children}</ThemeProvider>
     </StoreContext.Provider>
   );
 };

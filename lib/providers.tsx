@@ -12,13 +12,19 @@ import GlobalStyle from "@/styles/globalStyles";
 // Vendors
 import { SessionProvider } from "next-auth/react";
 
-const Providers = (props: React.PropsWithChildren, session: Session) => {
+const Providers = ({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null;
+}) => {
   return (
     <SessionProvider session={session}>
       <StyledComponentsRegistry>
         <GlobalStyle />
 
-        {props.children}
+        {children}
       </StyledComponentsRegistry>
     </SessionProvider>
   );

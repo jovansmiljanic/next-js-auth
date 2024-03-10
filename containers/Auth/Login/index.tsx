@@ -12,14 +12,12 @@ import { FormValues, LoginSchema, validateForm } from "@/schemas/login";
 // Icon's
 import { Eye } from "@styled-icons/fluentui-system-regular/Eye";
 import { EyeOff } from "@styled-icons/fluentui-system-regular/EyeOff";
-
 // Vendors
 import * as z from "zod";
 import { Formik } from "formik";
 import styled from "styled-components";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { set } from "mongoose";
 
 // Server actions
 
@@ -42,7 +40,6 @@ const EyeWrap = styled.div`
 
 export const Login: FC = () => {
   const router = useRouter();
-
   // Password eye state
   const [isEyeOpened, setIsEyeOpened] = useState(false);
 
@@ -121,6 +118,8 @@ export const Login: FC = () => {
               }
               disabled={isPending}
             />
+
+            <a href="/reset-password">Forgot password?</a>
 
             <FormError message={errorMessage} />
             <FormSuccess message={successMessage} />

@@ -5,7 +5,7 @@
  * @type {string[]}
  */
 
-export const publicRoutes = ["/new-verification"];
+export const publicRoutes = [""];
 
 /**
  *
@@ -13,7 +13,13 @@ export const publicRoutes = ["/new-verification"];
  * These routes will redirect logged in users to the home page
  * @type {string[]}
  */
-export const authRoutes = ["/login", "/sign-up"];
+export const authRoutes = [
+  "/login",
+  "/sign-up",
+  "/new-verification",
+  "/reset-password",
+  "/new-password",
+];
 
 /**
  *

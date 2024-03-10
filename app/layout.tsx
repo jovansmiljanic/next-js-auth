@@ -33,21 +33,21 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html className={comfortaa.className}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width" />
+    <Store theme={theme.value}>
+      <Providers session={session}>
+        <html className={comfortaa.className}>
+          <head>
+            <meta charSet="utf-8" />
+            <meta name="viewport" content="width=device-width" />
 
-        <title>App name</title>
-      </head>
+            <title>App name</title>
+          </head>
 
-      <body>
-        <Store theme={theme.value}>
-          <Providers>
-            <Layout session={session}>{children}</Layout>
-          </Providers>
-        </Store>
-      </body>
-    </html>
+          <body>
+            <Layout>{children}</Layout>
+          </body>
+        </html>
+      </Providers>
+    </Store>
   );
 }

@@ -10,13 +10,12 @@ import type { Session } from "next-auth";
 
 interface ILayout {
   children: React.ReactNode;
-  session: Session | null;
 }
 
-export const Layout: FC<ILayout> = ({ session, children }) => {
+export const Layout: FC<ILayout> = ({ children }) => {
   return (
     <>
-      <Header session={session} />
+      <Header />
 
       {children}
 

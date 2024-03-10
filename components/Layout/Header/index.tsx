@@ -20,12 +20,10 @@ import styled, { css } from "styled-components";
 import { Button, Heading } from "@/components";
 
 // Local components
-import { Navigation } from "./Navigation";
 import { signOut } from "next-auth/react";
 
 import { Moon } from "@styled-icons/feather/Moon";
 import { Sun } from "@styled-icons/feather/Sun";
-import { Session } from "next-auth";
 
 const ThemeWrapper = styled.div`
   display: flex;
@@ -44,11 +42,11 @@ const ThemeItem = styled.div`
   ${({ theme: { defaults, colors, font, ...theme } }) => css``}
 `;
 
-interface IHeader {
-  session: Session | null;
-}
+interface IHeader {}
 
-export const Header: FC<IHeader> = ({ session }) => {
+export const Header: FC<IHeader> = () => {
+  const session = useSession();
+
   const { isTablet, appTheme, setAppTheme } = useContext(StoreContext);
 
   const [toggled, setToggle] = useState<boolean>(true);

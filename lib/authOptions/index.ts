@@ -10,6 +10,8 @@ import { database } from "@/lib/server";
 import { User } from "@/models";
 
 import bcrypt from "bcryptjs";
+import { generateVerificationToken } from "../tokens";
+import { sendVerificationEmail } from "../mail";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -33,6 +35,14 @@ export const authOptions: AuthOptions = {
         })
           .lean()
           .select("+password");
+
+        if (!user.emailVerified) {
+          const verificationToken = await generateVerificationToken(user.email);
+
+          await sendVerificationEmail(user.email, verificationToken.token);
+
+          throw new Error("Confirmation email sent!");
+        }
 
         // If user isn't found, Reject the promise and return an Error
         if (!user) {
@@ -70,6 +80,19 @@ export const authOptions: AuthOptions = {
   },
 
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "credentials") return true;
+
+      // If user is found, return true
+      const existingUser = await User.findOne({
+        email: user.email,
+      });
+
+      if (!existingUser.emailVerified) return false;
+
+      return true;
+    },
+
     async session({ session, token: { user } }) {
       // Assign user on the current session
       user && (session.user = user as UserType);

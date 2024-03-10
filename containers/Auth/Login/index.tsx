@@ -19,6 +19,7 @@ import { Formik } from "formik";
 import styled from "styled-components";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { set } from "mongoose";
 
 // Server actions
 
@@ -67,23 +68,26 @@ export const Login: FC = () => {
         }}
         validate={validateForm}
         onSubmit={async (data: z.infer<typeof LoginSchema>) => {
+          setErrorMessage("");
+          setSuccessMessage("");
+
           const validatedFields = LoginSchema.safeParse(data);
 
           if (!validatedFields.success) {
-            setErrorMessage(validatedFields.error.errors[0].message);
+            setErrorMessage("Invalid fields");
           }
 
           await signIn("credentials", {
             email: data.email,
             password: data.password,
             redirect: false,
-          }).then(error => {
-            if (error) {
-              switch (error.error) {
+          }).then(res => {
+            if (res?.error) {
+              switch (res.error) {
                 case "CredentialsSignin":
                   setErrorMessage("Invalid credentials");
                 default:
-                  setErrorMessage(error.error!);
+                  setErrorMessage(res.error);
               }
             } else {
               // Set error to false

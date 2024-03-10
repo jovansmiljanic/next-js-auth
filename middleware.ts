@@ -18,16 +18,8 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(req.nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(req.nextUrl.pathname);
 
-  if (!isLoggedIn && isAuthRoute) {
-    return null;
-  }
-
   if (isApiAuthRoute) {
     return null;
-  }
-
-  if (!isLoggedIn) {
-    return Response.redirect(new URL("/login", req.nextUrl));
   }
 
   if (isAuthRoute) {
@@ -44,11 +36,19 @@ export default async function middleware(req: NextRequest) {
   // Set theme cookie
   const theme = req.cookies.get("theme");
 
+  response.headers.set("x-middleware-cache", "no-cache");
+
   if (!theme) {
     response.cookies.set({ name: "theme", value: "light", path: "/login" });
+
+    return response;
   } else {
     response.cookies.set({ name: "theme", value: theme.value, path: "/login" });
+
+    return response;
   }
+
+  return null;
 }
 
 export const config = {

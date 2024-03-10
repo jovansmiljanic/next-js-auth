@@ -7,6 +7,7 @@ const Schema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: false, select: false },
     image: { type: String, required: false },
+    emailVerified: { type: Date, default: null },
   },
   { collection: "Users", timestamps: true }
 );

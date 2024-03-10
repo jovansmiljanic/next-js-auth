@@ -4,7 +4,7 @@
 import type { FC } from "react";
 
 // Core
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 // Store context
 import { StoreContext } from "@/context";
@@ -13,10 +13,11 @@ import { StoreContext } from "@/context";
 import Link from "next/link";
 
 // Vendors
+import { useSession } from "next-auth/react";
 import styled, { css } from "styled-components";
 
 // Global components
-import { Button } from "@/components";
+import { Button, Heading } from "@/components";
 
 // Local components
 import { Navigation } from "./Navigation";
@@ -24,10 +25,31 @@ import { signOut } from "next-auth/react";
 
 import { Moon } from "@styled-icons/feather/Moon";
 import { Sun } from "@styled-icons/feather/Sun";
-import { useSetCookie } from "@/lib/shared";
+import { Session } from "next-auth";
 
-export const Header: FC = () => {
-  const { isTablet, setAppTheme } = useContext(StoreContext);
+const ThemeWrapper = styled.div`
+  display: flex;
+
+  ${({ theme: { defaults, colors, font, ...theme } }) => css`
+    border: 1px solid ${colors.primary};
+  `}
+`;
+
+const ThemeItem = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+
+  ${({ theme: { defaults, colors, font, ...theme } }) => css``}
+`;
+
+interface IHeader {
+  session: Session | null;
+}
+
+export const Header: FC<IHeader> = ({ session }) => {
+  const { isTablet, appTheme, setAppTheme } = useContext(StoreContext);
 
   const [toggled, setToggle] = useState<boolean>(true);
 
@@ -39,37 +61,40 @@ export const Header: FC = () => {
     <WrapperHeader>
       <Link href="/">Logo</Link>
 
-      <button>
-        <Sun
-          width={30}
-          height={30}
-          color="primary"
-          onClick={() => setAppTheme("light")}
-        />
-        <Moon
-          width={30}
-          height={30}
-          color="primary"
-          onClick={() => setAppTheme("dark")}
-        />
-      </button>
+      <ThemeWrapper>
+        <ThemeItem onClick={() => setAppTheme("light")}>
+          <Sun width={30} height={30} color="primary" />
+          <Heading as="h6" $padding={{ md: { left: 1 } }}>
+            Light
+          </Heading>
+        </ThemeItem>
 
-      {!isTablet && (
-        <Nav>
-          <Link href="/">Home</Link>
+        <ThemeItem onClick={() => setAppTheme("dark")}>
+          <Moon width={30} height={30} color="primary" />
+          <Heading as="h6" $padding={{ md: { left: 1 } }}>
+            Dark
+          </Heading>
+        </ThemeItem>
+      </ThemeWrapper>
 
+      <Nav>
+        <Heading as="h6" color="textColor">
+          Home
+        </Heading>
+
+        {session && (
           <Button $variant="primary" $size="small" onClick={() => signOut()}>
             Sign out
           </Button>
-        </Nav>
-      )}
+        )}
+      </Nav>
 
-      {isTablet && (
+      {/* {isTablet && (
         <>
           <Navigation toggled={toggled} />
           <Toggler onClick={() => setToggle(!toggled)} />
         </>
-      )}
+      )} */}
     </WrapperHeader>
   );
 };

@@ -10,6 +10,8 @@ import { Store } from "@/context";
 import { Layout } from "@/components/Layout";
 
 import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
@@ -20,13 +22,15 @@ export const metadata = {
   description: "App description",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const cookieStore = cookies();
   const theme = cookieStore.get("theme")! as { value: "light" | "dark" };
+
+  const session = await getServerSession(authOptions);
 
   return (
     <html className={comfortaa.className}>
@@ -40,7 +44,7 @@ export default function RootLayout({
       <body>
         <Store theme={theme.value}>
           <Providers>
-            <Layout>{children}</Layout>
+            <Layout session={session}>{children}</Layout>
           </Providers>
         </Store>
       </body>

@@ -5,7 +5,7 @@
  * @type {string[]}
  */
 
-export const publicRoutes = ["/"];
+export const publicRoutes = ["/new-verification"];
 
 /**
  *
@@ -28,4 +28,4 @@ export const apiAuthPrefix = "/api/auth";
  * Default redirect after user logs in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/users";
+export const DEFAULT_LOGIN_REDIRECT = "/";

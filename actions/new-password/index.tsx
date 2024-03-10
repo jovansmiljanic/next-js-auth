@@ -1,12 +1,10 @@
 "use server";
 import * as z from "zod";
 
-import { NewPasswordSchema } from "@/schemas/new-password";
+import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/lib/passwordResetToken";
-import { User } from "@/models";
+import { User, ResetPassword } from "@/models";
 import bcrypt from "bcryptjs";
-import { ResetPasswordSchema } from "@/schemas/reset-password";
-import { ResetPassword } from "@/models/ResetPassword";
 
 export const newPassword = async (
   data: z.infer<typeof NewPasswordSchema>,

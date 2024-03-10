@@ -22,8 +22,7 @@ import { Button, Heading } from "@/components";
 // Local components
 import { signOut } from "next-auth/react";
 
-import { Moon } from "@styled-icons/feather/Moon";
-import { Sun } from "@styled-icons/feather/Sun";
+import { SunIcon, MoonIcon } from "@/public/svg";
 
 const ThemeWrapper = styled.div`
   display: flex;
@@ -61,14 +60,14 @@ export const Header: FC<IHeader> = () => {
 
       <ThemeWrapper>
         <ThemeItem onClick={() => setAppTheme("light")}>
-          <Sun width={30} height={30} color="primary" />
+          <SunIcon width={30} height={30} color="#208DD0" />
           <Heading as="h6" $padding={{ md: { left: 1 } }}>
             Light
           </Heading>
         </ThemeItem>
 
         <ThemeItem onClick={() => setAppTheme("dark")}>
-          <Moon width={30} height={30} color="primary" />
+          <MoonIcon width={30} height={30} color="#208DD0" />
           <Heading as="h6" $padding={{ md: { left: 1 } }}>
             Dark
           </Heading>

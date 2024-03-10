@@ -11,9 +11,10 @@ import * as z from "zod";
 import bcrypt from "bcryptjs";
 
 // Validation schema
-import { SignUpSchema } from "@/schemas/signUp";
+import { SignUpSchema } from "@/schemas";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
+import { redirect } from "next/navigation";
 
 export const register = async (values: z.infer<typeof SignUpSchema>) => {
   const validatedFields = SignUpSchema.safeParse(values);

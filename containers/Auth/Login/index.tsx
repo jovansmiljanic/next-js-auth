@@ -7,11 +7,10 @@ import { type FC, useTransition, useState } from "react";
 import { Button, FormField, FormError, FormSuccess } from "@/components";
 
 // Validation schema
-import { FormValues, LoginSchema, validateForm } from "@/schemas/login";
+import { LoginSchema, validateLoginForm } from "@/schemas";
 
+import { EyeIcon, EyeOffIcon } from "@/public/svg";
 // Icon's
-import { Eye } from "@styled-icons/fluentui-system-regular/Eye";
-import { EyeOff } from "@styled-icons/fluentui-system-regular/EyeOff";
 // Vendors
 import * as z from "zod";
 import { Formik } from "formik";
@@ -58,12 +57,12 @@ export const Login: FC = () => {
 
   return (
     <LoginWrap>
-      <Formik<FormValues>
+      <Formik
         initialValues={{
           email: "",
           password: "",
         }}
-        validate={validateForm}
+        validate={validateLoginForm}
         onSubmit={async (data: z.infer<typeof LoginSchema>) => {
           setErrorMessage("");
           setSuccessMessage("");
@@ -90,7 +89,9 @@ export const Login: FC = () => {
               // Set error to false
               setSuccessMessage("Succes");
 
-              router.push("/");
+              setTimeout(function () {
+                router.push("/");
+              }, 1000);
             }
           });
         }}
@@ -109,11 +110,7 @@ export const Login: FC = () => {
               label="Password"
               customCode={
                 <EyeWrap onClick={() => setIsEyeOpened(!isEyeOpened)}>
-                  {isEyeOpened ? (
-                    <EyeOff color="textColorPrimary" width="30px" />
-                  ) : (
-                    <Eye color="textColorPrimary" width="30px" />
-                  )}
+                  {isEyeOpened ? <EyeOffIcon /> : <EyeIcon />}
                 </EyeWrap>
               }
               disabled={isPending}

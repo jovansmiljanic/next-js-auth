@@ -12,15 +12,15 @@ import styled from "styled-components";
 import { Button, FormError, FormField, FormSuccess } from "@/components";
 
 // Icon's
-import { Eye } from "@styled-icons/fluentui-system-regular/Eye";
-import { EyeOff } from "@styled-icons/fluentui-system-regular/EyeOff";
+import { EyeIcon, EyeOffIcon } from "@/public/svg";
 
 // Validation schema
-import { FormValues, SignUpSchema, validateForm } from "@/schemas/signUp";
+import { SignUpSchema, validateSignUpForm } from "@/schemas/";
 
 // Server actions
 import { register } from "@/actions/register";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const SignUpWrap = styled.div`
   display: flex;
@@ -40,6 +40,9 @@ const EyeWrap = styled.div`
 `;
 
 export const SignUp: FC = () => {
+  // Handle router
+  const router = useRouter();
+
   // Password eye state
   const [isEyeOpened, setIsEyeOpened] = useState(false);
 
@@ -58,13 +61,13 @@ export const SignUp: FC = () => {
 
   return (
     <SignUpWrap>
-      <Formik<FormValues>
+      <Formik
         initialValues={{
           fullName: "",
           email: "",
           password: "",
         }}
-        validate={validateForm}
+        validate={validateSignUpForm}
         onSubmit={async (data: z.infer<typeof SignUpSchema>) => {
           setErrorMessage(undefined);
           setSuccessMessage(undefined);
@@ -87,11 +90,7 @@ export const SignUp: FC = () => {
               label="Password"
               customCode={
                 <EyeWrap onClick={() => setIsEyeOpened(!isEyeOpened)}>
-                  {isEyeOpened ? (
-                    <EyeOff color="textColorPrimary" width="30px" />
-                  ) : (
-                    <Eye color="textColorPrimary" width="30px" />
-                  )}
+                  {isEyeOpened ? <EyeOffIcon /> : <EyeIcon />}
                 </EyeWrap>
               }
             />

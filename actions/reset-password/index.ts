@@ -1,6 +1,6 @@
 "use server";
 import * as z from "zod";
-import { ResetPasswordSchema } from "@/schemas/reset-password";
+import { ResetPasswordSchema } from "@/schemas";
 import { database } from "@/lib/server";
 import { User } from "@/models";
 import { generatePasswordResetToken } from "@/lib/tokens";

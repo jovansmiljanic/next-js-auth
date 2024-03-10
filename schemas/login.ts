@@ -7,10 +7,10 @@ export const LoginSchema = z.object({
 });
 
 // Infer the type from the schema
-export type FormValues = z.infer<typeof LoginSchema>;
+type FormValues = z.infer<typeof LoginSchema>;
 
 // Define a function that uses the schema to validate form values
-export const validateForm = (values: FormValues) => {
+export const validateLoginForm = (values: FormValues) => {
   try {
     LoginSchema.parse(values);
   } catch (error) {

@@ -7,18 +7,13 @@ import { type FC, useTransition, useState } from "react";
 import { Button, FormField, FormError, FormSuccess } from "@/components";
 
 // Validation schema
-import {
-  FormValues,
-  NewPasswordSchema,
-  validateForm,
-} from "@/schemas/new-password";
+import { NewPasswordSchema, validateNewPasswordForm } from "@/schemas/";
 
 // Vendors
 import * as z from "zod";
 import { Formik } from "formik";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
-import { resetPassword } from "@/actions/reset-password";
 import { newPassword } from "@/actions/new-password";
 
 // Server actions
@@ -41,6 +36,8 @@ const EyeWrap = styled.div`
 `;
 
 export const NewPassword: FC = () => {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -53,11 +50,11 @@ export const NewPassword: FC = () => {
 
   return (
     <LoginWrap>
-      <Formik<FormValues>
+      <Formik
         initialValues={{
           password: "",
         }}
-        validate={validateForm}
+        validate={validateNewPasswordForm}
         onSubmit={async (data: z.infer<typeof NewPasswordSchema>) => {
           setErrorMessage(undefined);
           setSuccessMessage(undefined);
@@ -66,6 +63,10 @@ export const NewPassword: FC = () => {
             newPassword(data, token).then(({ error, success }) => {
               setErrorMessage(error);
               setSuccessMessage(success);
+
+              setTimeout(function () {
+                router.push("/login");
+              }, 1000);
             });
           });
         }}

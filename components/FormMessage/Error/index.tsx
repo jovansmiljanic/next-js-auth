@@ -4,9 +4,8 @@ import type { FC } from "react";
 // Vendors
 import styled, { css } from "styled-components";
 
-import { ErrorOutline } from "@styled-icons/material-outlined/ErrorOutline";
-
 import { Heading } from "@/components";
+import { ErrorIcon } from "@/public/svg";
 
 const FormErrorWrap = styled.div`
   display: flex;
@@ -32,7 +31,7 @@ export const FormError: FC<FormIError> = ({ message }) => {
 
   return (
     <FormErrorWrap>
-      <ErrorOutline width={35} height={35} />
+      <ErrorIcon width={35} height={35} color="white" />
 
       <Heading
         as="h6"

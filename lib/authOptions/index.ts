@@ -1,3 +1,4 @@
+// Providers
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -6,12 +7,17 @@ import type { AuthOptions } from "next-auth";
 
 // Global types
 import type { User as UserType } from "@/types";
+
+// Lib's
 import { database } from "@/lib/server";
+import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/tokens";
+
+// User model
 import { User } from "@/models";
 
+// Vndor
 import bcrypt from "bcryptjs";
-import { generateVerificationToken } from "../tokens";
-import { sendVerificationEmail } from "../mail";
 
 export const authOptions: AuthOptions = {
   providers: [

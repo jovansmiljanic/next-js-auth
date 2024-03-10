@@ -33,7 +33,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <Store theme={theme.value}>
+    <Store theme={!theme ? "light" : theme.value}>
       <Providers session={session}>
         <html className={comfortaa.className}>
           <head>

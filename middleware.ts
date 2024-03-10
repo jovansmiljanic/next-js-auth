@@ -1,14 +1,28 @@
+// Next auth
 import { getToken } from "next-auth/jwt";
+
+// Local routes
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
 } from "./routes";
+
+// Core
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
   const response = NextResponse.next();
+
+  // Set theme cookie
+  const theme = req.cookies.get("theme");
+
+  if (!theme) {
+    response.cookies.set({ name: "theme", value: "light" });
+  } else {
+    response.cookies.set({ name: "theme", value: theme.value });
+  }
 
   // Checks if the user is logged in
   const isLoggedIn = await getToken({ req, secret: process.env.SECRET });
@@ -31,21 +45,6 @@ export default async function middleware(req: NextRequest) {
 
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL("/login", req.nextUrl));
-  }
-
-  // Set theme cookie
-  const theme = req.cookies.get("theme");
-
-  response.headers.set("x-middleware-cache", "no-cache");
-
-  if (!theme) {
-    response.cookies.set({ name: "theme", value: "light", path: "/login" });
-
-    return response;
-  } else {
-    response.cookies.set({ name: "theme", value: theme.value, path: "/login" });
-
-    return response;
   }
 
   return null;

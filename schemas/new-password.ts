@@ -9,7 +9,7 @@ export const NewPasswordSchema = z.object({
 export type FormValues = z.infer<typeof NewPasswordSchema>;
 
 // Define a function that uses the schema to validate form values
-export const validateForm = (values: FormValues) => {
+export const validateNewPasswordForm = (values: FormValues) => {
   try {
     NewPasswordSchema.parse(values);
   } catch (error) {

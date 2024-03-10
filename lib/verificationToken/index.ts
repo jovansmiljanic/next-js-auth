@@ -1,5 +1,8 @@
+// Database
 import { database } from "@/lib/server";
-import { VerificationToken } from "@/models/VerificationToken";
+
+// Verification Token Model
+import { VerificationToken } from "@/models";
 
 export const getVerificationTokenByEmail = async (email: string) => {
   await database();

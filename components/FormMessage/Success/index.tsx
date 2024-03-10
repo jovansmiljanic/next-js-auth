@@ -4,9 +4,8 @@ import type { FC } from "react";
 // Vendors
 import styled, { css } from "styled-components";
 
-import { CheckCircle } from "@styled-icons/material-outlined/CheckCircle";
-
 import { Heading } from "@/components";
+import { SuccessIcon } from "@/public/svg";
 
 const FormSuccessWrap = styled.div`
   display: flex;
@@ -32,7 +31,8 @@ export const FormSuccess: FC<IFormSuccess> = ({ message }) => {
 
   return (
     <FormSuccessWrap>
-      <CheckCircle width={35} height={35} />
+      <SuccessIcon width={35} height={35} color="white" />
+
       <Heading
         as="h6"
         $weight="semiBold"

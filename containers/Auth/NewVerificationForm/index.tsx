@@ -2,11 +2,13 @@
 
 import { newVerification } from "@/actions/newVerification";
 import { FormError, FormSuccess } from "@/components";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 // Core types
 import { useCallback, useEffect, useState, type FC } from "react";
 
 export const NewVerificationForm: FC = () => {
+  const router = useRouter();
+
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
@@ -25,6 +27,8 @@ export const NewVerificationForm: FC = () => {
       .then(data => {
         setSuccess(data.success);
         setError(data.error);
+
+        router.push("/login");
       })
       .catch(err => {
         console.log(err);

@@ -11,7 +11,7 @@ export const SignUpSchema = z.object({
 export type FormValues = z.infer<typeof SignUpSchema>;
 
 // Define a function that uses the schema to validate form values
-export const validateForm = (values: FormValues) => {
+export const validateSignUpForm = (values: FormValues) => {
   try {
     SignUpSchema.parse(values);
   } catch (error) {

@@ -2,8 +2,7 @@
 
 import { database } from "@/lib/server";
 import { getVerificationTokenByToken } from "@/lib/verificationToken";
-import { User } from "@/models";
-import { VerificationToken } from "@/models";
+import { User, VerificationToken } from "@/models";
 
 export const newVerification = async (token: string) => {
   await database();

@@ -7,15 +7,7 @@ import { type FC, useTransition, useState } from "react";
 import { Button, FormField, FormError, FormSuccess } from "@/components";
 
 // Validation schema
-import {
-  FormValues,
-  ResetPasswordSchema,
-  validateForm,
-} from "@/schemas/reset-password";
-
-// Icon's
-import { Eye } from "@styled-icons/fluentui-system-regular/Eye";
-import { EyeOff } from "@styled-icons/fluentui-system-regular/EyeOff";
+import { ResetPasswordSchema, validateResetPasswordForm } from "@/schemas";
 
 // Vendors
 import * as z from "zod";
@@ -56,11 +48,11 @@ export const ResetPassword: FC = () => {
 
   return (
     <LoginWrap>
-      <Formik<FormValues>
+      <Formik
         initialValues={{
           email: "",
         }}
-        validate={validateForm}
+        validate={validateResetPasswordForm}
         onSubmit={async (data: z.infer<typeof ResetPasswordSchema>) => {
           setErrorMessage(undefined);
           setSuccessMessage(undefined);

@@ -47,6 +47,10 @@ export default async function middleware(req: NextRequest) {
     return Response.redirect(new URL("/login", req.nextUrl));
   }
 
+  if (isLoggedIn) {
+    return null;
+  }
+
   return null;
 }
 

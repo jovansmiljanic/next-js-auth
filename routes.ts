@@ -9,7 +9,7 @@ export const publicRoutes = [""];
 
 /**
  *
- * An array that are user for authentication
+ * An array that are used for authentication
  * These routes will redirect logged in users to the home page
  * @type {string[]}
  */

@@ -6,5 +6,6 @@ export interface User {
   name: string;
   email: string;
   password: string;
+  emailVerified: Date;
   user: Types.PopulatedDoc<User & Document>;
 }

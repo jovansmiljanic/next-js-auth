@@ -81,7 +81,7 @@ export const Login: FC = () => {
                 case "CredentialsSignin":
                   setErrorMessage("Invalid credentials");
                 default:
-                  setErrorMessage(res.error);
+                  setErrorMessage("Something went wrong.");
               }
             } else {
               // Set error to false

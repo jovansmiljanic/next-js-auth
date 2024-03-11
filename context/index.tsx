@@ -14,7 +14,7 @@ import { ThemeProvider } from "styled-components";
 
 // App context properties
 import { AppThemes } from "@/context/theme";
-import { useSetCookie } from "@/lib/shared";
+import { useSetCookie } from "@/lib/useSetCookie";
 
 type Theme = "light" | "dark";
 

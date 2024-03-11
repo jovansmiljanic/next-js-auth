@@ -1,5 +1,5 @@
 // Database
-import { database } from "@/lib/server";
+import { database } from "@/lib/database";
 
 // Verification Token Model
 import { VerificationToken } from "@/models";

@@ -1,8 +1,8 @@
 // Token Generation
 import { v4 as uuidv4 } from "uuid";
 
-// Lib's
-import { database } from "@/lib/server";
+// Server lib
+import { database } from "@/lib/database";
 import { getVerificationTokenByEmail } from "@/lib/verificationToken";
 import { getPasswordResetTokenByEmail } from "@/lib/passwordResetToken";
 

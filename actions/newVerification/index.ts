@@ -1,6 +1,6 @@
 "use server";
 
-import { database } from "@/lib/server";
+import { database } from "@/lib/database";
 import { getVerificationTokenByToken } from "@/lib/verificationToken";
 import { User, VerificationToken } from "@/models";
 

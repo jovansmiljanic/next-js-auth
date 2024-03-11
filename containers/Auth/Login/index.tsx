@@ -18,8 +18,6 @@ import styled from "styled-components";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-// Server actions
-
 const LoginWrap = styled.div`
   display: flex;
   flex-direction: column;

@@ -4,7 +4,7 @@
 import { User } from "@/models";
 
 // Database connection
-import { database } from "@/lib/server";
+import { database } from "@/lib/database";
 
 // Vendors
 import * as z from "zod";

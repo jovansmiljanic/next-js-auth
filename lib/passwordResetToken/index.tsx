@@ -2,7 +2,7 @@
 import { ResetPassword } from "@/models";
 
 // Database
-import { database } from "@/lib/server";
+import { database } from "@/lib/database";
 
 export const getPasswordResetTokenByToken = async (token: string) => {
   try {

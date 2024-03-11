@@ -44,7 +44,7 @@ const ThemeItem = styled.div`
 interface IHeader {}
 
 export const Header: FC<IHeader> = () => {
-  const session = useSession();
+  const { data } = useSession();
 
   const { isTablet, appTheme, setAppTheme } = useContext(StoreContext);
 
@@ -53,6 +53,8 @@ export const Header: FC<IHeader> = () => {
   useEffect(() => {
     setToggle(!isTablet);
   }, [isTablet]);
+
+  console.log("session", data);
 
   return (
     <WrapperHeader>
@@ -79,7 +81,7 @@ export const Header: FC<IHeader> = () => {
           Home
         </Heading>
 
-        {session && (
+        {data && (
           <Button $variant="primary" $size="small" onClick={() => signOut()}>
             Sign out
           </Button>

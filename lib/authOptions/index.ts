@@ -8,8 +8,8 @@ import type { AuthOptions } from "next-auth";
 // Global types
 import type { User as UserType } from "@/types";
 
-// Lib's
-import { database } from "@/lib/server";
+// Server lib
+import { database } from "@/lib/database";
 import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
 

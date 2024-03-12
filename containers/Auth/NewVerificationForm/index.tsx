@@ -16,11 +16,7 @@ export const NewVerificationForm: FC = () => {
 
   const token = searchParams.get("token");
 
-  if (!token) {
-    setError("Token does not exist");
-
-    return;
-  }
+  if (!token) return <span>No token found!</span>;
 
   const onSubmit = useCallback(() => {
     newVerification(token)
@@ -32,7 +28,7 @@ export const NewVerificationForm: FC = () => {
       })
       .catch(err => {
         console.log(err);
-        // setError("An error occurred");
+        setError("An error occurred");
       });
   }, [token]);
 

@@ -54,8 +54,6 @@ export const Header: FC<IHeader> = () => {
     setToggle(!isTablet);
   }, [isTablet]);
 
-  console.log("session", data);
-
   return (
     <WrapperHeader>
       <Link href="/">Logo</Link>

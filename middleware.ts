@@ -27,6 +27,8 @@ export default async function middleware(req: NextRequest) {
   // Checks if the user is logged in
   const isLoggedIn = await getToken({ req, secret: process.env.SECRET });
 
+  console.log("isLoggedIn", Boolean(isLoggedIn));
+
   // Protects route
   const isApiAuthRoute = req.nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(req.nextUrl.pathname);
@@ -37,18 +39,14 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (isAuthRoute) {
-    if (isLoggedIn) {
+    if (Boolean(isLoggedIn)) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.nextUrl));
     }
     return null;
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
+  if (!Boolean(isLoggedIn) && !isPublicRoute) {
     return Response.redirect(new URL("/login", req.nextUrl));
-  }
-
-  if (isLoggedIn) {
-    return null;
   }
 
   return null;
